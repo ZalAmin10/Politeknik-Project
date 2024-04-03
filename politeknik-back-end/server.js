@@ -1,19 +1,22 @@
 const express = require('express');
+const bodyParser = require('body-parser');
 const mysql = require('mysql');
+const cors = require('cors');
+const authRoutes = require('./controllers/auth');
+const userRoutes = require('./controllers/user');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// MySQL connection configuration
-const connection = mysql.createConnection({
-    host: 'localhost', // Change this to your MySQL host if it's not running locally
-    user: 'root', // Change this to your MySQL username
-    password: 'root', // Change this to your MySQL password
+// Database connection configuration
+global.connection = mysql.createConnection({
+    host: 'localhost',
+    user: 'root',
+    password: 'root',
     database: 'politeknik',
-    port: 3306 // Default MySQL port is 3306
+    port: 3306
 });
 
-// Connect to MySQL
 connection.connect((err) => {
     if (err) {
         console.error('Error connecting to MySQL database:', err);
@@ -22,18 +25,15 @@ connection.connect((err) => {
     console.log('Connected to MySQL database');
 });
 
-// Define routes
-app.get('/users', (req, res) => {
-    // Perform a sample query to the user table
-    connection.query('SELECT * FROM users', (error, results, fields) => {
-        if (error) {
-            console.error('Error executing MySQL query:', error);
-            res.status(500).json({ error: 'Internal Server Error' });
-            return;
-        }
-        res.json({ users: results }); // Assuming the query was successful, return the results
-    });
-});
+// Middleware
+app.use(cors()); // Enable CORS
+app.use(bodyParser.json());
+
+// Use authentication routes
+app.use('/', authRoutes);
+
+// Use user routes
+app.use('/', userRoutes);
 
 // Start the server
 app.listen(PORT, () => {
