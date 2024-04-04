@@ -9,6 +9,8 @@ const userRoutes = require('./controllers/user');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+global.currentTime = new Date(); // Get current date and time
+
 // Database connection configuration
 global.connection = mysql.createConnection({
     host: 'localhost',

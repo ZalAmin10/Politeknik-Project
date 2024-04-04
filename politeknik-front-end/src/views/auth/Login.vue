@@ -1,6 +1,6 @@
 <template>
     <div>
-      <input type="text" v-model="username" placeholder="Username">
+      <input type="text" v-model="email" placeholder="Email">
       <input type="password" v-model="password" placeholder="Password">
       <button @click="login">Login</button>
     </div>
@@ -12,14 +12,14 @@
 
     data() {
       return {
-        username: '',
+        email: '',
         password: ''
       };
     },
     methods: {
       login() {
         this.$axios.post('http://localhost:3000/login', {
-          username: this.username,
+          email: this.email,
           password: this.password
         })
         .then(response => {
